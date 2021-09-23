@@ -57,8 +57,8 @@ void TestForNewDel()
 
     cout << "Printing after delete  and delete[]" << endl;
     /*
-    Anything printed now is basicly "random" if the data that was there is overwitten we will get "junk".
-    If things work out we'll get the original data. Basicly this falls under the 'Undefined behavior'.
+    Anything printed now is basically "random" if the data that was there is overwitten we will get "junk".
+    If things work out we'll get the original data. Basically this falls under the 'Undefined behavior'.
     As explained in this stackoverflow post https://stackoverflow.com/questions/2397984/undefined-unspecified-and-implementation-defined-behavior
     In reality delete does not destroy the data. It simply let's the Operating System it does no use the specified memory range.
     */

@@ -262,7 +262,7 @@ int main(int argc, char *argv[])
     Student student2 = Student(student1);
     Student student3 = student1;
 
-    //Demostrating that the copy constructor in fact create a deep copy of student 1
+    //Demonstrating that the copy constructor in fact create a deep copy of student 1
     cout << "Contents of student1: ";
     student1.Print();
     cout << "Contents of student2: ";
@@ -303,7 +303,7 @@ int main(int argc, char *argv[])
     cout << "Grades of student1: \n";
     student1.printGrades();
 
-    //Using gettter to print student1
+    //Using getter to print student1
     cout << "========================= GETTERS =======================\n";
     cout << "Contents of student1: ";
     cout << "Registry Number: " << student1.getStudentRegistryNumber() << " "
@@ -331,7 +331,7 @@ int main(int argc, char *argv[])
     Course course4 = Course("cs4", "Course 4", 3);
     Course tmp[] = {course1, course2, course3, course4};
     student1.setCourses(tmp);
-    printf("Printing intitial courses(%d)\n", student1.getstudentCourses());
+    printf("Printing initial courses(%d)\n", student1.getstudentCourses());
     student1.printCourses();
     Course course5 = Course("cs5", "Course 5", 5);
     student1 += course5;

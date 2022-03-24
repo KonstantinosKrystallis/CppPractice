@@ -2,87 +2,89 @@
 
 using namespace std;
 
-int globalIntArray[] = {1, 3, 5, 7};
-
-void ChangeValueOfConst(const int &n);
+void ChangeValueOfConst(const double &n);
 void TestForNewDel();
 void TestPassByReference(int &);
-int &TestReturnReference(int);
+int &TestReturnReference(int *, int);
 void TestDefaultParams(int = 1, int = 2);
 
 int main(int argc, char *argv[])
 {
+    int intArray[] = {1, 3, 5, 7};
 
     const int number = 5;
     ChangeValueOfConst(number);
-    cout << endl; //Just adding some spacing
+    cout << endl; // Just adding some spacing
     TestForNewDel();
     cout << endl;
     int localNumber = 2;
-    cout << "Printing LocalNumber in main: " << localNumber << endl;
+    cout << "Εκτύπωση LocalNumber στην main: " << localNumber << endl;
     TestPassByReference(localNumber);
-    cout << "Printing LocalNumber in main after TestPassByReference is called: " << localNumber << endl;
+    cout << "Εκτύπωση LocalNumber στην main μετά την κλήση της TestPassByReference: " << localNumber << endl;
     cout << endl;
-    cout << "Printing the 3rd element of globalIntArray " << TestReturnReference(2) << endl;
+    cout << "Εκτύπωση του 3ου στοιχείου του intArray " << TestReturnReference(intArray, 2) << endl;
     cout << endl;
-    TestDefaultParams();     //Call with no params given from the user
-    TestDefaultParams(5, 5); //Call with params given from the "user
+    TestDefaultParams();     // Call with no params given from the user
+    TestDefaultParams(5, 5); // Call with params given from the "user
     return 0;
 }
 
-void ChangeValueOfConst(const int &n)
+#pragma region Functions(+)
+
+void ChangeValueOfConst(const double &n)
 {
-    int *ptr = const_cast<int *>(&n);
-    cout << "The initial value of number is: " << n << endl;
+    double *ptr = const_cast<double *>(&n);
+    cout << "Η αρχική τιμή του αριθμού είναι: " << n << endl;
     *ptr = 3;
-    cout << "The new value of number is: " << n << endl;
+    cout << "Η νέα τιμή του αριθμού είναι: " << n << endl;
 }
 
 void TestForNewDel()
 {
-    int *ptr = new int(65);   //Creating an empty pointer with a value of 65
-    int *array = new int[10]; //Creating an empty array with a size of 10
+    int *ptr = new int(65);   // Creating an empty pointer with a value of 65
+    int *array = new int[10]; // Creating an empty array with a size of 10
 
     /*Do programming things*/
-    cout << "Value of ptr = " << *ptr << endl;
+    cout << "Η τιμή του ptr είναι: " << *ptr << endl;
 
     for (size_t i = 0; i < 10; i++)
     {
-        array[i] = i + 1; //Placing i + 1 into array
-        cout << "i: " << i << " | Element value: " << array[i] << endl;
+        array[i] = i + 1; // Placing i + 1 into array
+        cout << "i: " << i << " | Τιμή στοιχείου: " << array[i] << endl;
     }
 
-    delete ptr;     //Destroying ptr
-    delete[] array; //Destroying array
+    delete ptr;     // Destroying ptr
+    delete[] array; // Destroying array
 
-    cout << "Printing after delete  and delete[]" << endl;
+    cout << "Εκτύπωση μετά την χρήση των delete και delete[]" << endl;
     /*
     Anything printed now is basically "random" if the data that was there is overwitten we will get "junk".
     If things work out we'll get the original data. Basically this falls under the 'Undefined behavior'.
-    As explained in this stackoverflow post https://stackoverflow.com/questions/2397984/undefined-unspecified-and-implementation-defined-behavior
-    In reality delete does not destroy the data. It simply let's the Operating System it does no use the specified memory range.
+    In reality delete does not destroy the data. It simply let's the Operating System know it does no longer uses the specified memory range.
     */
-    cout << "Value of ptr = " << *ptr << endl;
+    cout << "Η τιμή του ptr = " << *ptr << endl;
     for (size_t i = 0; i < 10; i++)
     {
-        array[i] = i + 1; //Placing i + 1 into array
-        cout << "i: " << i << " | Element value: " << array[i] << endl;
+        array[i] = i + 1; // Placing i + 1 into array
+        cout << "i: " << i << " | Τιμή στοιχείου: " << array[i] << endl;
     }
 }
 
 void TestPassByReference(int &funcLocal)
 {
-    cout << "Printing LocalNumber in TestPassByReference before change: " << funcLocal << endl;
+    cout << "Εκτύπωση του LocalNumber στην TestPassByReference πριν την αλλαγή: " << funcLocal << endl;
     funcLocal++;
-    cout << "Printing LocalNumber in TestPassByReference after change: " << funcLocal << endl;
+    cout << "Εκτύπωση του LocalNumber στην TestPassByReference μετά την αλλαγή: " << funcLocal << endl;
 }
 
-int &TestReturnReference(int index)
+int &TestReturnReference(int *intArray, int index)
 {
-    return globalIntArray[index];
+    return intArray[index];
 }
 
 void TestDefaultParams(int a, int b)
 {
     cout << "a = " << a << " b = " << b << " a * b = " << a * b << endl;
 }
+
+#pragma endregion

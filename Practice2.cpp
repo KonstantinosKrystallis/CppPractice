@@ -1,60 +1,67 @@
 #include <iostream>
-#include <string.h>
+#include <cstring>
 #include <string>
 #include <new>
 #include <array>
 
 using namespace std;
 
+#pragma region Student(+)
 class Student
 {
-    //The default access identifier is private and there is no real reason to include it,
-    //but it is considered good practice to do so. Also I personally like to see it.
-    //It makes the code easier to read.
+    // The default access identifier is private and there is no real reason to include it,
+    // but it is considered good practice to do so. Also I personally like to see it.
+    // It makes the code easier to read.
 private:
     char *studentRegistryNumber;  // Student's registry number
     string firstLastName;         // Student's name
     unsigned int currentSemester; // Student's current semester
-    unsigned int noPassedClasses; //Number of passed classes
-    float *passedClassesGrades;   //The grades for each passed class
+    unsigned int noPassedClasses; // Number of passed classes
+    float *passedClassesGrades;   // The grades for each passed class
 
 public:
-    //These are the constructors
+    // These are the constructors
     Student(const char *, string);
     Student(char *, string, unsigned int);
     Student(char *, string, unsigned int, unsigned int, float *);
     Student(const Student &);
-    //These are the getters
+
+    // These are the getters
     char *getStudentRegistryNumber();
     string getFirstLastName();
     unsigned int getCurrentSemester();
     unsigned int getNoPassedClasses();
     float *getPassedClassesGrades();
-    //These are the setters
+
+    // These are the setters
     void setStudentRegistryNumber(char *);
     void setFirstLastName(string);
     void setCurrentSemester(unsigned int);
     void setNoPassedClasses(unsigned int);
     void setPassedClassesGrades(float *);
-    //This is the destructor
-    ~Student();
-    //This prints the first three atributes of the student
-    void Print();
+
+    ~Student(); // This is the destructor
+
+    void Print(); // This prints the first three atributes of the student
     void printGrades();
     void addGrade(float);
 };
-//These are the constructors
+
+// These are the constructors
+
+// Two argument constructor
 Student::Student(const char *r, string s)
 {
     studentRegistryNumber = new char[strlen(r) + 1];
     strcpy(studentRegistryNumber, r);
-    //studentRegistryNumber = "cs161010";
+    // studentRegistryNumber = "cs161010";
     firstLastName = s;
     currentSemester = 1;
     noPassedClasses = 0;
     passedClassesGrades = NULL;
 }
 
+// Three argument constructor
 Student::Student(char *r, string s, unsigned int no)
 {
     studentRegistryNumber = new char[strlen(r) + 1];
@@ -63,9 +70,10 @@ Student::Student(char *r, string s, unsigned int no)
     currentSemester = 1;
     noPassedClasses = no;
     passedClassesGrades = NULL;
-    //passedClassesGrades = (no > 0) ? new float[no] : NULL; //This is the short version of if, the Ternary Operator.
+    // passedClassesGrades = (no > 0) ? new float[no] : NULL; //This is the short version of if, the Ternary Operator.
 }
 
+// Five argument constructor
 Student::Student(char *r, string s, unsigned int n, unsigned int no, float *g)
 {
     studentRegistryNumber = new char[strlen(r) + 1];
@@ -73,10 +81,10 @@ Student::Student(char *r, string s, unsigned int n, unsigned int no, float *g)
     firstLastName = s;
     currentSemester = n;
     noPassedClasses = no;
-    passedClassesGrades = g; //This needs to be a float array
+    passedClassesGrades = g; // This needs to be a float array
 }
 
-//Copy constructor
+// Copy constructor
 Student::Student(const Student &t)
 {
     int srnLen = strlen(t.studentRegistryNumber) + 1;
@@ -90,14 +98,14 @@ Student::Student(const Student &t)
 }
 
 //============================================================================
-//These are the getters
+// These are the getters
 char *Student::getStudentRegistryNumber() { return studentRegistryNumber; }
 string Student::getFirstLastName() { return firstLastName; }
 unsigned int Student::getCurrentSemester() { return currentSemester; }
 unsigned int Student::getNoPassedClasses() { return noPassedClasses; }
 float *Student::getPassedClassesGrades() { return passedClassesGrades; }
 
-//These are the setters
+// These are the setters
 void Student::setStudentRegistryNumber(char *r)
 {
     int srnLen = strlen(r) + 1;
@@ -109,12 +117,14 @@ void Student::setCurrentSemester(unsigned int n) { currentSemester = n; }
 void Student::setNoPassedClasses(unsigned int no) { noPassedClasses = no; }
 void Student::setPassedClassesGrades(float *g)
 {
+    noPassedClasses = sizeof(+g); // Ensures the noPassedClasses is set to the size of the given array(No clue how it works but it does)
+    cout << "Hi " << noPassedClasses << endl;
     passedClassesGrades = new float[noPassedClasses];
     memcpy(passedClassesGrades, g, noPassedClasses * sizeof(float));
     passedClassesGrades = g;
 }
 
-//This is the destructor
+// This is the destructor
 Student::~Student()
 {
     delete[] studentRegistryNumber;
@@ -124,20 +134,26 @@ Student::~Student()
 //============================================================================
 void Student::Print()
 {
-    cout << "Registry Number: " << studentRegistryNumber << " "
-         << "Name: " << firstLastName << " "
-         << "Semester: " << currentSemester << endl;
+    cout << "Αριθμός Μητρώου: " << studentRegistryNumber << " "
+         << "Ονοματεπώνυμο: " << firstLastName << " "
+         << "Εξάμηνο: " << currentSemester << " "
+         << "Αριθμός Περασμένων Μαθημάτων: " << noPassedClasses;
+    int arrSize = sizeof(passedClassesGrades) / sizeof(*passedClassesGrades);
+    if (noPassedClasses > 0) // Only print grades if they exist
+        printGrades();
+    cout << endl;
 }
 
 void Student::printGrades()
 {
+    cout << " || Βαθμοί: ";
     float sum = 0;
     for (int i = 0; i < noPassedClasses; i++)
     {
         sum += passedClassesGrades[i];
-        cout << "Class " << i + 1 << ": " << passedClassesGrades[i] << endl;
+        cout << "Μάθημα " << i + 1 << ": " << passedClassesGrades[i] << " ";
     }
-    cout << "Mean grade: " << sum / noPassedClasses << endl;
+    cout << "Μέσος όρος: " << sum / noPassedClasses;
 }
 
 void Student::addGrade(float grade)
@@ -150,6 +166,8 @@ void Student::addGrade(float grade)
     passedClassesGrades[noPassedClasses - 1] = grade;
 }
 
+#pragma endregion
+
 //----------------------------------MAIN----------------------------------------------//
 
 int main(int argc, char *argv[])
@@ -157,65 +175,62 @@ int main(int argc, char *argv[])
     Student student1 = Student("cs161010", "Konstantinos Krystallis");
     Student student2 = Student(student1);
     Student student3 = student1;
+    Student student4 = Student("ΑΜ123456", "Μιχάλης Ιορδάνης", 2, 3, new float[3]{5.4, 7, 6.2});
 
-    //Demonstrating that the copy constructor in fact create a deep copy of student 1
-    cout << "Contents of student1: ";
+    // Demonstrating that the copy constructor in fact create a deep copy of student 1
+    cout << "Περιεχόμενα του student1: ";
     student1.Print();
-    cout << "Contents of student2: ";
+    cout << "Περιεχόμενα του student2: ";
     student2.Print();
-    cout << "Contents of student3: ";
+    cout << "Περιεχόμενα του student3: ";
     student3.Print();
+    cout << "Περιεχόμενα του student4: ";
+    student4.Print();
 
-    //Changing some of the values to demonstrate the use of setters
-    student1.setStudentRegistryNumber("cs171010"); //The compiler throws a warning for this, but that never stopped anyone from doing anything
+    // Changing some of the values to demonstrate the use of setters
+    student1.setStudentRegistryNumber("cs171010"); // The compiler throws a warning for this, but that never stopped anyone from doing anything
     student1.setFirstLastName("Joe Doe");
     student2.setCurrentSemester(6);
-    student3.setNoPassedClasses(4);
-    float grades[] = {5, 8.5, 7, 5.95};
-    student3.setPassedClassesGrades(grades);
+    // student3.setNoPassedClasses(4);
+    student3.setPassedClassesGrades(new float[4]{5, 8.5, 7, 5.95});
 
-    //Printing the changes
-    cout << "======================= SETTERS =========================\n";
-    cout << "Contents of student1: ";
+    // Printing the changes
+    cout << "\n======================= Προσθήκη στοιχείων με την χρήση setters =========================\n\n";
+    cout << "Περιεχόμενα του student1: ";
     student1.Print();
-    cout << "Grades of student1: \n";
-    student1.printGrades();
-    cout << "Contents of student2: ";
+    cout << "Περιεχόμενα του student2: ";
     student2.Print();
-    cout << "Grades of student2: \n";
-    student2.printGrades();
-    cout << "Contents of student3: ";
+    cout << "Περιεχόμενα του student3: ";
     student3.Print();
-    cout << "Grades of student3: \n";
-    student3.printGrades();
 
-    //Adding grades to student 1
-    cout << "======================== ADD GRADE ========================\n";
+    // Adding grades to student 1
     student1.addGrade(7.2);
     student1.addGrade(5);
     student1.addGrade(9.5);
-    cout << "Contents of student1: ";
+    cout << "\n======================== Προσθήκη βαθμών στον student1 ========================\n\n";
+    cout << "Περιεχόμενα του student1: ";
     student1.Print();
-    cout << "Grades of student1: \n";
-    student1.printGrades();
 
-    //Using getter to print student1
-    cout << "========================= GETTERS =======================\n";
-    cout << "Contents of student1: ";
-    cout << "Registry Number: " << student1.getStudentRegistryNumber() << " "
-         << "Name: " << student1.getFirstLastName() << " "
-         << "Semester: " << student1.getCurrentSemester() << " "
-         << "Number of passed classes: " << student1.getNoPassedClasses() << "\n";
+    // Using getters to print student1
+    cout << "\n========================= Εκτύπωση στοιχείων student1 με την χρήση getters =======================\n\n";
+    cout << "Περιεχόμενα του student1: ";
+    cout << "Αριθμός Μητρώου: " << student1.getStudentRegistryNumber() << " "
+         << "Ονοματεπώνυμο: " << student1.getFirstLastName() << " "
+         << "Εξάμηνο: " << student1.getCurrentSemester() << " "
+         << "Αριθμός Περασμένων Μαθημάτων: " << student1.getNoPassedClasses() << " || ";
     if (student1.getPassedClassesGrades() != NULL)
     {
-        cout << "Grades: \n";
+        cout << "Βαθμοί: ";
         int t = student1.getNoPassedClasses();
         float *temp = new float[student1.getNoPassedClasses()];
         memcpy(temp, student1.getPassedClassesGrades(), t * sizeof(float));
+        float sum = 0;
         for (int i = 0; i < t; i++)
         {
-            cout << "Class " << i + 1 << ": " << temp[i] << endl;
+            sum += temp[i];
+            cout << "Μάθημα " << i + 1 << ": " << temp[i] << " ";
         }
+        cout << "Μέσος όρος: " << sum / student1.getNoPassedClasses() << endl;
     }
 
     return 0;

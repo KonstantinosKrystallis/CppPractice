@@ -6,6 +6,9 @@ void ChangeValueOfConst(const double &n);
 void TestForNewDel();
 void TestPassByReference(int &);
 int &TestReturnReference(int *, int);
+void GreaterThanFive(int);
+void GreaterThanFive(double);
+void GreaterThanFive(float);
 void TestDefaultParams(int = 1, int = 2);
 
 int main(int argc, char *argv[])
@@ -23,6 +26,14 @@ int main(int argc, char *argv[])
     cout << "Εκτύπωση LocalNumber στην main μετά την κλήση της TestPassByReference: " << localNumber << endl;
     cout << endl;
     cout << "Εκτύπωση του 3ου στοιχείου του intArray " << TestReturnReference(intArray, 2) << endl;
+    cout << endl;
+    GreaterThanFive(3);
+    GreaterThanFive(6);
+    GreaterThanFive(5);
+    GreaterThanFive((float)4.96355);
+    GreaterThanFive((float)6.2);
+    GreaterThanFive(6.255155858);
+    GreaterThanFive(4.9);
     cout << endl;
     TestDefaultParams();     // Call with no params given from the user
     TestDefaultParams(5, 5); // Call with params given from the "user
@@ -80,6 +91,30 @@ void TestPassByReference(int &funcLocal)
 int &TestReturnReference(int *intArray, int index)
 {
     return intArray[index];
+}
+
+void GreaterThanFive(int n)
+{
+    if (n > 5)
+        cout << "Ο αριθμός " << n << " είναι μεγαλύτερος του 5" << endl;
+    else
+        cout << "Ο αριθμός " << n << " δεν είναι μεγαλύτερος του 5" << endl;
+}
+
+void GreaterThanFive(double n)
+{
+    if (n > 5)
+        cout << "Ο αριθμός " << n << " είναι μεγαλύτερος του 5" << endl;
+    else
+        cout << "Ο αριθμός " << n << " δεν είναι μεγαλύτερος του 5" << endl;
+}
+
+void GreaterThanFive(float n)
+{
+    if (n > 5)
+        cout << "Ο αριθμός " << n << " είναι μεγαλύτερος του 5" << endl;
+    else
+        cout << "Ο αριθμός " << n << " δεν είναι μεγαλύτερος του 5" << endl;
 }
 
 void TestDefaultParams(int a, int b)

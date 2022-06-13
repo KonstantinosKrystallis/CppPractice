@@ -14,13 +14,13 @@ class Student
     // but it is considered good practice to do so. Also I personally like to see it.
     // It makes the code easier to read.
 private:
-    char *studentRegistryNumber;  // Student's registry number
-    string firstLastName;         // Student's name
-    unsigned int currentSemester; // Student's current semester
-    unsigned int noPassedClasses; // Number of passed classes
-    float *passedClassesGrades;   // The grades for each passed class
-    unsigned int studentCourses;  // The number of courses the student is attending in a semester
-    Course *courses;              // The list of courses the student is attending in a semester
+    char *studentRegistryNumber;      // Student's registry number
+    string firstLastName;             // Student's name
+    unsigned int currentSemester;     // Student's current semester
+    unsigned int noPassedClasses;     // Number of passed classes
+    float *passedClassesGrades;       // The grades for each passed class
+    unsigned int studentCoursesCount; // The number of courses the student is attending in a semester
+    Course *courses;                  // The list of courses the student is attending in a semester
 
 public:
     // These are the constructors
@@ -36,7 +36,7 @@ public:
     unsigned int getCurrentSemester();
     unsigned int getNoPassedClasses();
     float *getPassedClassesGrades();
-    unsigned int getStudentCourses();
+    unsigned int getStudentCoursesCount();
     Course *getCourses();
 
     // These are the setters
@@ -45,13 +45,14 @@ public:
     void setCurrentSemester(unsigned int);
     void setNoPassedClasses(unsigned int);
     void setPassedClassesGrades(float *);
-    void setStudentCourses(unsigned int);
+    void setStudentCoursesCount(unsigned int);
     void setCourses(Course *);
 
     // This is the destructor
     ~Student(); // This is the destructor
 
-    void Print(); // This prints the first three atributes of the student
+    void Print();
+    void Print(ostream &); // This prints the first three atributes of the student
     void IncreaseSemester();
     void printGrades();
     void printCourses();

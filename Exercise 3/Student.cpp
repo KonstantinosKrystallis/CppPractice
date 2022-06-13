@@ -1,10 +1,10 @@
 #include <iostream>
-#include <string>
-#include <cstring>
 #include <array>
+#include <cstring>
+#include <string>
 
-#include "Student.h"
 #include "Course.h"
+#include "Student.h"
 
 using namespace std;
 
@@ -15,8 +15,11 @@ Student::Student()
     strcpy(studentRegistryNumber, "Χωρίς ΑΜ");
     firstLastName = "Χωρίς Ονοματεπώνυμο";
     currentSemester = 1;
+    noPassedClasses = 0;
+    passedClassesGrades = new float[0];
+    studentCoursesCount = 0;
+    courses = new Course[0];
 }
-
 // Two argument constructor
 Student::Student(const char *r, string s)
 {
@@ -24,17 +27,21 @@ Student::Student(const char *r, string s)
     strcpy(studentRegistryNumber, r);
     firstLastName = s;
     currentSemester = 1;
+    noPassedClasses = 0;
+    passedClassesGrades = new float[0];
+    studentCoursesCount = 0;
+    courses = new Course[0];
 }
-
 // Three argument constructor
 Student::Student(char *r, string s, unsigned int no)
 {
     studentRegistryNumber = new char[strlen(r) + 1];
     strcpy(studentRegistryNumber, r);
     firstLastName = s;
-    currentSemester = 1;
+    currentSemester = no;
+    noPassedClasses = 0;
+    studentCoursesCount = 0;
 }
-
 Student::Student(char *r, string s, unsigned int n, unsigned int no, float *g)
 {
     studentRegistryNumber = new char[strlen(r) + 1];
@@ -42,9 +49,14 @@ Student::Student(char *r, string s, unsigned int n, unsigned int no, float *g)
     firstLastName = s;
     currentSemester = n;
     noPassedClasses = no;
-    passedClassesGrades = g;
+    passedClassesGrades = new float[no];
+    for (int i = 0; i < no; i++)
+    {
+        passedClassesGrades[i] = g[i];
+    }
+    studentCoursesCount = 0;
+    courses = new Course[0];
 }
-
 // Copy constructor
 Student::Student(const Student &t)
 {
@@ -53,6 +65,26 @@ Student::Student(const Student &t)
     memcpy(studentRegistryNumber, t.studentRegistryNumber, srnLen);
     firstLastName = t.firstLastName;
     currentSemester = t.currentSemester;
+    noPassedClasses = t.noPassedClasses;
+    if (t.noPassedClasses > 0)
+    {
+        passedClassesGrades = new float[t.noPassedClasses];
+        memcpy(passedClassesGrades, t.passedClassesGrades, t.noPassedClasses);
+    }
+    else
+    {
+        passedClassesGrades = new float[0];
+    }
+    studentCoursesCount = t.studentCoursesCount;
+    if (t.studentCoursesCount > 0)
+    {
+        courses = new Course[t.studentCoursesCount];
+        memcpy(courses, t.courses, t.studentCoursesCount);
+    }
+    else
+    {
+        courses = new Course[0];
+    }
 }
 
 //============================================================================
@@ -62,7 +94,7 @@ string Student::getFirstLastName() { return firstLastName; }
 unsigned int Student::getCurrentSemester() { return currentSemester; }
 unsigned int Student::getNoPassedClasses() { return noPassedClasses; }
 float *Student::getPassedClassesGrades() { return passedClassesGrades; }
-unsigned int Student::getStudentCourses() { return studentCourses; }
+unsigned int Student::getStudentCoursesCount() { return studentCoursesCount; }
 Course *Student::getCourses() { return courses; }
 
 // These are the setters
@@ -82,11 +114,11 @@ void Student::setPassedClassesGrades(float *g)
     memcpy(passedClassesGrades, g, noPassedClasses * sizeof(float));
     passedClassesGrades = g;
 }
-void Student::setStudentCourses(unsigned int c) { studentCourses = c; }
+void Student::setStudentCoursesCount(unsigned int c) { studentCoursesCount = c; }
 void Student::setCourses(Course *cs)
 {
-    courses = new Course[studentCourses];
-    memcpy(courses, cs, studentCourses * sizeof(Course));
+    courses = new Course[studentCoursesCount];
+    memcpy(courses, cs, studentCoursesCount * sizeof(Course));
     courses = cs;
 }
 
@@ -94,33 +126,45 @@ void Student::setCourses(Course *cs)
 Student::~Student()
 {
     delete[] studentRegistryNumber;
+    delete[] passedClassesGrades;
+    delete[] courses;
 }
 
 void Student::Print()
 {
-    cout << "Registry Number: " << studentRegistryNumber << " "
-         << "Name: " << firstLastName << " "
-         << "Semester: " << currentSemester << endl;
+    cout << "Αριθμός Μητρώου: " << studentRegistryNumber << " "
+         << "Ονοματεπώνυμο: " << firstLastName << " "
+         << "Εξάμηνο: " << currentSemester << endl;
+}
+void Student::Print(ostream &os)
+{
+    os << "Αριθμός Μητρώου: " << studentRegistryNumber << " "
+       << "Ονοματεπώνυμο: " << firstLastName << " "
+       << "Εξάμηνο: " << currentSemester << endl;
 }
 void Student::printGrades()
 {
+    string output;
     float sum = 0;
+
     for (int i = 0; i < noPassedClasses; i++)
     {
         sum += passedClassesGrades[i];
-        cout << "Class " << i + 1 << ": " << passedClassesGrades[i] << endl;
+        output.append("Μάθημα %d: %f\n", i + 1, passedClassesGrades[i]);
     }
-    cout << "Mean grade: " << sum / noPassedClasses << endl;
+    output.append("Μέσος όρος Μαθημάτων: %f\n", sum / noPassedClasses);
+
+    cout << output;
 }
 void Student::printCourses()
 {
-    for (int i = 0; i < studentCourses; i++)
+    for (int i = 0; i < studentCoursesCount; i++)
     {
-        cout << "Course ID: "
+        cout << "Κωδικός Μαθήματος: "
              << courses[i].getCourseId()
-             << " | Course name: "
+             << " | Τίτλος Μαθήματος: "
              << courses[i].getCourseName()
-             << " | Semester: "
+             << " | Εξάμηνο: "
              << courses[i].getCourseSemester()
              << endl;
     }
@@ -134,13 +178,17 @@ void Student::addGrade(float grade)
     passedClassesGrades = tmpArr;
     passedClassesGrades[noPassedClasses - 1] = grade;
 }
+void Student::IncreaseSemester()
+{
+    currentSemester++;
+}
 
 // Operators overload
 void Student::operator+=(const Course &c)
 {
-    studentCourses++;
-    realloc(courses, studentCourses); // Resizing Initial array
-    courses[studentCourses - 1] = c;  // Appending new element
+    studentCoursesCount++;
+    realloc(courses, studentCoursesCount); // Resizing Initial array
+    courses[studentCoursesCount - 1] = c;  // Appending new element
 }
 
 int Student::operator==(const Student &s) { return (s.currentSemester == currentSemester); }
@@ -152,19 +200,23 @@ int Student::operator>=(const Student &s) { return (s.currentSemester >= current
 
 ostream &operator<<(ostream &os, const Student &s)
 {
-    os << "Registry Number: " << s.studentRegistryNumber << " | Name: " << s.firstLastName;
+    string output = "";
+    float sum = 0;
+    if (s.noPassedClasses == 0)
+    {
+        os << "Ο μαθητής " + s.firstLastName + " δεν έχει περασμένα μαθήματα" << endl;
+    }
+    else
+    {
+        os << "Φοιτητής/τρια: " << s.firstLastName << endl;
+        os << "Βαθμοί Περασμένων Μαθημάτων(" << s.noPassedClasses << "): \n";
+        for (int i = 0; i < s.noPassedClasses; i++)
+        {
+            sum += s.passedClassesGrades[i];
+            os << "\t " << i + 1 << ": " << s.passedClassesGrades[i] << endl;
+        }
+        os << "Μέσος όρος: " << sum / s.noPassedClasses << endl;
+    }
+
     return os;
-}
-
-//============================================================================
-void Student::Print()
-{
-    cout << "Αριθμός Μητρώου: " << studentRegistryNumber << " "
-         << "Ονοματεπώνυμο: " << firstLastName << " "
-         << "Εξάμηνο: " << currentSemester << endl;
-}
-
-void Student::IncreaseSemester()
-{
-    currentSemester++;
 }

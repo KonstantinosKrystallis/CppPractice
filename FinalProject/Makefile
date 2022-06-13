@@ -1,4 +1,4 @@
 main:
 	clear
-	g++ -lncurses -o Main.exe Main.cpp
+	g++ -o Main.exe Main.cpp -lncurses
 	./Main.exe

@@ -36,6 +36,6 @@ public:
     ~Student(); // This is the destructor
 
     void Print(); // This prints the first three atributes of the student
-    void IncreasSemester();
+    void IncreaseSemester();
 };
 #endif

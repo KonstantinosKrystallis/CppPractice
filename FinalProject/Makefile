@@ -1,4 +1,4 @@
 main:
 	clear
 	g++ -o Main.exe Main.cpp -lncurses
-	./Main.exe
+	./Main.exe "map.txt"

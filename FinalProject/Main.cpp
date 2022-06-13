@@ -2,11 +2,12 @@
 
 #include <random>
 #include <iostream>
-#include <curses.h>
+#include <ncurses.h>
 #include <stdlib.h>
 
-#define ITERMAX 10000 int
-main(void)
+#define ITERMAX 10000
+
+int main(int argc, char const *argv[])
 {
     long iter;
     int yi, xi;
@@ -37,8 +38,8 @@ main(void)
     /* iterate the triangle */
     for (iter = 0; iter < ITERMAX; iter++)
     {
-        index = getrandom_int() % 3;
-        5 yi = (yi + y[index]) / 2;
+        index = rand() % 3;
+        yi = (yi + y[index]) / 2;
         xi = (xi + x[index]) / 2;
         mvaddch(yi, xi, '*');
         refresh();

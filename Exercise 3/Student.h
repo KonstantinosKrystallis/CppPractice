@@ -55,7 +55,7 @@ public:
     void Print(ostream &); // This prints the first three atributes of the student
     void IncreaseSemester();
     void printGrades();
-    void printCourses();
+    void printCourses(ostream &os);
     void addGrade(float);
 
     // Operators overload

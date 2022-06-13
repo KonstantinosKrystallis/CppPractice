@@ -43,6 +43,12 @@ int main(int argc, char *argv[])
         student1.setStudentRegistryNumber("cs171010"); // The compiler throws a warning for this, but that never stopped anyone from doing anything
         student1.setFirstLastName("Joe Doe");
         student2.setCurrentSemester(6);
+        student1.setStudentCoursesCount(4);
+        Course course1 = Course("cs1", "Course 1", 1);
+        Course course2 = Course("cs2", "Course 2", 1);
+        Course course3 = Course("cs3", "Course 3", 2);
+        Course course4 = Course("cs4", "Course 4", 3);
+        student1.setCourses(new Course[4]{course1, course2, course3, course4});
 
         // Printing the changes
         out << "\n======================= Προσθήκη στοιχείων με την χρήση setters =========================\n\n";
@@ -77,8 +83,27 @@ int main(int argc, char *argv[])
             << "Ονοματεπώνυμο: " << student1.getFirstLastName() << " "
             << "Εξάμηνο: " << student1.getCurrentSemester() << endl;
 
+        out << "\n======================= Επίδειξη υπερφόρτωσης τελεστή += =========================\n\n";
+        Course course5 = Course("cs5", "Course 5", 5);
+        Course course6 = Course("cs6", "Course 6", 6);
+        student4 += course5;
+        student4 += course6;
+        student4.Print(out);
+
+        out << "\n========================= Επίδειξη υπερφόρτωσης τελεστών σύγκρισης =======================\n\n";
+        student2.setCurrentSemester(2);
+        student3.setCurrentSemester(3);
+        out << "student2.currentSemester: " << student2.getCurrentSemester() << "\tstudent3.currentSemester: " << student3.getCurrentSemester() << endl;
+        out << "student2 == student3: " << (student2 == student3) << endl;
+        out << "student2 != student3: " << (student2 != student3) << endl;
+        out << "student2 < student3: " << (student2 < student3) << endl;
+        out << "student2 <= student3: " << (student2 <= student3) << endl;
+        out << "student2 > student3: " << (student2 > student3) << endl;
+        out << "student2 >= student3: " << (student2 >= student3) << endl;
+
         out << "\n======================= Επίδειξη υπερφόρτωσης τελεστή << =========================\n\n";
         out << student4 << endl;
+
         out.close();
         cout << "======================= Αποθήκευση εξόδου στο αρχείο \"out.txt\" =======================\"\n\n";
 

@@ -40,7 +40,9 @@ Student::Student(char *r, string s, unsigned int no)
     firstLastName = s;
     currentSemester = no;
     noPassedClasses = 0;
+    passedClassesGrades = new float[0];
     studentCoursesCount = 0;
+    courses = new Course[0];
 }
 Student::Student(char *r, string s, unsigned int n, unsigned int no, float *g)
 {
@@ -135,12 +137,16 @@ void Student::Print()
     cout << "Αριθμός Μητρώου: " << studentRegistryNumber << " "
          << "Ονοματεπώνυμο: " << firstLastName << " "
          << "Εξάμηνο: " << currentSemester << endl;
+    if (studentCoursesCount > 0)
+        printCourses(cout);
 }
 void Student::Print(ostream &os)
 {
     os << "Αριθμός Μητρώου: " << studentRegistryNumber << " "
        << "Ονοματεπώνυμο: " << firstLastName << " "
        << "Εξάμηνο: " << currentSemester << endl;
+    if (studentCoursesCount > 0)
+        printCourses(os);
 }
 void Student::printGrades()
 {
@@ -156,17 +162,17 @@ void Student::printGrades()
 
     cout << output;
 }
-void Student::printCourses()
+void Student::printCourses(ostream &os)
 {
     for (int i = 0; i < studentCoursesCount; i++)
     {
-        cout << "Κωδικός Μαθήματος: "
-             << courses[i].getCourseId()
-             << " | Τίτλος Μαθήματος: "
-             << courses[i].getCourseName()
-             << " | Εξάμηνο: "
-             << courses[i].getCourseSemester()
-             << endl;
+        os << "\tΚωδικός Μαθήματος: "
+           << courses[i].getCourseId()
+           << " | Τίτλος Μαθήματος: "
+           << courses[i].getCourseName()
+           << " | Εξάμηνο: "
+           << courses[i].getCourseSemester()
+           << endl;
     }
 }
 void Student::addGrade(float grade)
@@ -187,8 +193,14 @@ void Student::IncreaseSemester()
 void Student::operator+=(const Course &c)
 {
     studentCoursesCount++;
-    realloc(courses, studentCoursesCount); // Resizing Initial array
-    courses[studentCoursesCount - 1] = c;  // Appending new element
+    Course *temp = new Course[studentCoursesCount];
+    for (int i = 0; i < studentCoursesCount - 1; i++)
+    {
+        temp[i] = courses[i];
+    }
+    temp[studentCoursesCount - 1] = c;
+    delete[] courses;
+    courses = temp;
 }
 
 int Student::operator==(const Student &s) { return (s.currentSemester == currentSemester); }

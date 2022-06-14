@@ -1,4 +1,4 @@
 main:
 	clear
-	g++ -o Main.exe Main.cpp -lncurses
-	./Main.exe "map.txt"
+	g++ -o Main Main.cpp CursesWindow.cpp Player.cpp Maze.cpp -lncurses
+	./Main "map.txt"

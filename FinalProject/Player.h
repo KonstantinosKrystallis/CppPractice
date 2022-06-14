@@ -1,26 +1,29 @@
-#ifndef COURSE_H
-#define COURSE_H
+#ifndef PLAYER_H
+#define PLAYER_H
 
-#include <string>
-
-using namespace std;
+#include "Maze.h"
+#include "Color.h"
 
 class Player
 {
-private:
-    string playerName;
-    string playerColor;
-
 public:
-    // Constructors
+    Player(int xx, int yy);
     Player();
-    Player(string, string);
-    ~Player();
-    // Getters
-    string getPlayerName();
-    string getPlayerColor();
-    // Setters
-    void setPlayerName(string);
-    void setPlayerColor(string);
+    void Show(const Color &color);
+
+    void ShowInfo(Maze &m, const Color &color);
+
+    void ShowWin(const Color &color);
+
+    void mov(Maze &m, int xx, int yy);
+
+    int getpos_x();
+    int getpos_y();
+    int getcounter();
+
+private:
+    int x;
+    int y;
+    int counter;
 };
 #endif

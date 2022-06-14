@@ -22,61 +22,98 @@ int main(int argc, char const *argv[])
         cout << "Μη επαρκείς παράμετροι στην γραμμή εντολών.\n";
     }
 
-    // Read map from file
-    fstream map(argv[1]);
-
-    if (!map.is_open())
-    {
-        cout << "Το αρχείο δεν άνοιξε. Ελεγξτε αν το αρχείο υπάρχει.\n";
-    }
-
-    // Start sizes and increase conform screen
-    // int width = 23, height = 15;
-    // while (width < (my_window.getx() / 2) - 3)
-    //     width += 2;
-    // while (height < my_window.gety() - 4)
-    //     height += 2;
-
     bool exitFlag = false;
 
-    // Create maze and add player and jewel
-    CursesWindow my_window;
-    Maze maze = Maze(map);
-    Player potter, malfoy, jewel;
-    int ch = 0;
-    while (!exitFlag)
+    try
     {
-        maze.Show(Color::green);
-        potter.Show(Color::red);
-        potter.ShowInfo(maze, Color::white);
-        ch = getch();
-        switch (ch)
+        CursesWindow my_window;
+
+        // Create maze and add player and jewel
+        Maze maze = Maze(argv[1]);
+
+        ifstream map(argv[1]);
+
+        if (!map.good())
         {
-        case KEY_UP:
-            potter.mov(maze, 0, -1);
-            break;
-        case KEY_DOWN:
-            potter.mov(maze, 0, 1);
-            break;
-        case KEY_LEFT:
-            potter.mov(maze, -1, 0);
-            break;
-        case KEY_RIGHT:
-            potter.mov(maze, 1, 0);
-            break;
-        case KEY_EXIT:
-        case 27:
-            exitFlag = true;
-            break;
-        default:
-            refresh();
+            throw invalid_argument("Το αρχείο δεν άνοιξε. Ελεγξτε αν το αρχείο υπάρχει.\n");
         }
-        // Check for winner
-        if (potter.getpos_y() == maze.getHeight() - 1)
+        else
         {
-            potter.ShowWin(Color::white);
-            exitFlag = true;
+            vector<char> t;
+
+            int w = 0, h = 0;
+            char currentChar;
+            while (map.get(currentChar))
+            {
+                if (currentChar != '\n')
+                {
+                    w++;
+                    t.push_back(currentChar);
+                }
+                else
+                {
+                    h++;
+                    w = 0;
+                }
+            }
+            map.close();
+
+            for (int i = 0; i < w * h; i++)
+            {
+                cout << t[i];
+                if (i % w == 0 && i != 0)
+                {
+                    cout << endl;
+                }
+            }
+
+            cout << w << " " << h << endl;
         }
+
+        Player potter, malfoy, jewel;
+        int ch = 0;
+        while (!exitFlag)
+        {
+            maze.Show(Color::green);
+            potter.Show(Color::red);
+            potter.ShowInfo(maze, Color::white);
+            ch = getch();
+            switch (ch)
+            {
+            case KEY_UP:
+                potter.makeMove(maze, 0, -1);
+                break;
+            case KEY_DOWN:
+                potter.makeMove(maze, 0, 1);
+                break;
+            case KEY_LEFT:
+                potter.makeMove(maze, -1, 0);
+                break;
+            case KEY_RIGHT:
+                potter.makeMove(maze, 1, 0);
+                break;
+            case 32:
+                potter.makeMove(maze, 0, 0);
+                break;
+            case KEY_EXIT:
+            case 27:
+                exitFlag = true;
+                break;
+            default:
+                refresh();
+            }
+            // Check for winner
+            if (potter.getPosY() == maze.getHeight() - 1)
+            {
+                potter.ShowWin(Color::white);
+                exitFlag = true;
+            }
+        }
+    }
+
+    catch (const exception &e)
+    {
+        cerr << e.what() << '\n';
     }
 
     return 0;

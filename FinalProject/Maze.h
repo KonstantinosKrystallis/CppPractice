@@ -10,14 +10,9 @@ class Maze
 {
 public:
     Maze(int x, int y);
-    Maze(fstream &map);
+    Maze(string fileName);
 
-    // Maze(Maze &) = delete;             // disable copy ructor
-    // Maze &operator=(Maze &) = delete;  // disable copy assignment
-    // Maze(Maze &&) = delete;            // disable move ructor
-    // Maze &operator=(Maze &&) = delete; // disable move assignment
-
-    ~Maze(); // destructor
+    ~Maze();
 
     void GenerateMaze(int x, int y);
 
@@ -26,6 +21,8 @@ public:
     char *getMaze();
     int getWidth();
     int getHeight();
+    void setWidth(int);
+    void setHeight(int);
     int myrand();
 
 private:

@@ -10,7 +10,7 @@ CursesWindow::CursesWindow() : x{0}, y{0}
     if (has_colors() == FALSE)
     {
         endwin();
-        cout << "Your terminal does not support colors\n";
+        cout << "Το τερματικό σας δεν υποστηρίζει χρώματα.\n";
         exit(1);
     }
     noecho();

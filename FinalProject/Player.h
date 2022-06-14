@@ -7,7 +7,7 @@
 class Player
 {
 public:
-    Player(int xx, int yy);
+    Player(int X, int Y);
     Player();
     void Show(const Color &color);
 
@@ -15,10 +15,10 @@ public:
 
     void ShowWin(const Color &color);
 
-    void mov(Maze &m, int xx, int yy);
+    void makeMove(Maze &m, int X, int Y);
 
-    int getpos_x();
-    int getpos_y();
+    int getPosX();
+    int getPosY();
     int getcounter();
 
 private:

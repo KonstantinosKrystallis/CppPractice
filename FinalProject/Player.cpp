@@ -5,8 +5,8 @@
 #include "Player.h"
 #include "Maze.h"
 
-Player::Player(int xx, int yy) // ructor
-    : x{xx}, y{yy}, counter{0}
+Player::Player(int X, int Y) // ructor
+    : x{X}, y{Y}, counter{0}
 {
 }
 
@@ -39,22 +39,22 @@ void Player::ShowWin(const Color &color)
     attroff(COLOR_PAIR(color));
 }
 
-void Player::mov(Maze &m, int xx, int yy)
+void Player::makeMove(Maze &m, int X, int Y)
 {
-    static auto mz = m.getMaze();
+    char *mz = m.getMaze();
 
-    if (x + xx <= 0 || x + xx >= m.getWidth() ||
-        y + yy <= 0 || y + yy >= m.getHeight())
+    if (x + X <= 0 || x + X >= m.getWidth() ||
+        y + Y <= 0 || y + Y >= m.getHeight())
         return; // Check bounds
 
-    if (mz[(y + yy) * m.getWidth() + (x + xx)] == 1)
+    if (mz[(y + Y) * m.getWidth() + (x + X)] == '*')
         return; // Check collisions
 
-    x += xx;
-    y += yy; // Change current position
+    x += X;
+    y += Y; // Change current position
     ++counter;
 }
 
-int Player::getpos_x() { return x; }
-int Player::getpos_y() { return y; }
+int Player::getPosX() { return x; }
+int Player::getPosY() { return y; }
 int Player::getcounter() { return counter; }

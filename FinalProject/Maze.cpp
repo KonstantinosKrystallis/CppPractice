@@ -7,104 +7,46 @@
 
 using namespace std;
 
-Maze::Maze(int x, int y)
-    : width{x}, height{y}
+Maze::Maze(string fileName)
 {
-    maze = new char[width * height];
-    for (int i = 0; i < height * width; ++i)
-        maze[i] = 1;
+    ifstream map(fileName);
 
-    random_device seeder;
-    mt19937 eng(seeder());
-    engine = eng;
-    uniform_int_distribution<int> dt(0, 3);
-    dist = dt;
-
-    // Make a maze
-    maze[1 * width + 1] = 0;
-    for (int y = 1; y < height; y += 2)
+    if (!map.is_open())
     {
-        for (int x = 1; x < width; x += 2)
-        {
-            GenerateMaze(x, y);
-        }
+        throw invalid_argument("Το αρχείο δεν άνοιξε. Ελεγξτε αν το αρχείο υπάρχει.\n");
     }
-
-    // Set up the entry and exit points.
-    maze[0 * width + 1] = 0;
-    maze[(height - 1) * width + (width - 2)] = 0;
-}
-
-Maze::Maze(fstream &map)
-{
-
-    while (int i = map.get() != '\n')
+    else
     {
-        if (i != '\n')
+        vector<char> t;
+        char currentChar;
+        height = width = 0;
+        while (map.get(currentChar))
         {
-            ++width;
+            if (currentChar != '\n')
+            {
+                t.push_back(currentChar);
+                width++;
+            }
+            else
+            {
+                height++;
+                width = 0;
+            }
         }
-        else if (i == '\n')
-        {
-            height++;
-            width = 0; // reset for next line.
-        }
-    }
-    if ()
-    {
-        /* code */
-    }
-    maze = new char[width * height];
-}
+        height++;
 
-Maze::~Maze()
-{
-    delete[] maze;
-}
+        maze = new char[width * height];
 
-void Maze::GenerateMaze(int x, int y)
-{
-    int x1 = 0, y1 = 0, x2 = 0, y2 = 0, dx = 0, dy = 0, dir = 0, count = 0;
-    dir = myrand();
-    while (count < 4)
-    {
-        dx = 0;
-        dy = 0;
-        switch (dir)
+        for (int i = 0; i < width * height; i++)
         {
-        case 0:
-            dx = 1;
-            break;
-        case 1:
-            dy = 1;
-            break;
-        case 2:
-            dx = -1;
-            break;
-        default:
-            dy = -1;
-            break;
+            maze[i] = t[i];
         }
-        x1 = x + dx;
-        y1 = y + dy;
-        x2 = x1 + dx;
-        y2 = y1 + dy;
-        if (x2 > 0 && x2 < width && y2 > 0 && y2 < height && maze[y1 * width + x1] == 1 && maze[y2 * width + x2] == 1)
-        {
-            maze[y1 * width + x1] = 0;
-            maze[y2 * width + x2] = 0;
-            x = x2;
-            y = y2;
-            dir = myrand();
-            count = 0;
-        }
-        else
-        {
-            dir = (dir + 1) % 4;
-            count += 1;
-        }
+
+        map.close();
     }
 }
+
+Maze::~Maze() { delete[] maze; }
 
 void Maze::Show(const Color &color)
 {
@@ -114,7 +56,7 @@ void Maze::Show(const Color &color)
     {
         for (int x = 0; x < width; ++x)
         {
-            printw(maze[y * width + x] == 1 ? "*" : ".");
+            printw(maze[y * width + x] == '*' ? "*" : ".");
         }
         printw("\n");
     }
@@ -124,4 +66,6 @@ void Maze::Show(const Color &color)
 char *Maze::getMaze() { return maze; }
 int Maze::getWidth() { return width; }
 int Maze::getHeight() { return height; }
+void Maze::setWidth(int w) { width = w; }
+void Maze::setHeight(int h) { height = h; }
 int Maze::myrand() { return dist(engine); }
